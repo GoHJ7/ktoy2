@@ -1,7 +1,9 @@
-FROM --platform=arm64
-
-COPY ./scrapper/app/
-
+FROM golang:alpine as builder
 WORKDIR /app
+COPY . .
+RUN go build -o scrapper .
 
-CMD["./scrapper"]
+FROM alpine
+COPY --from=builder /app/scrapper /scrapper
+CMD ["/scrapper"]
+
